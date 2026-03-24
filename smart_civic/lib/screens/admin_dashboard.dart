@@ -190,12 +190,12 @@ class AdminDashboard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 6,
                       children: [
                         _buildIndicator(Colors.green, 'Active: 30'),
-                        const SizedBox(width: 12),
                         _buildIndicator(Colors.blue, 'Inside: 20'),
-                        const SizedBox(width: 12),
                         _buildIndicator(Colors.orange, 'Outside: 10'),
                       ],
                     ),
