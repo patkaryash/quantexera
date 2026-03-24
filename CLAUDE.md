@@ -38,20 +38,27 @@ flutter test test/widget_test.dart  # Run single test file
 
 ### smart_civic (SmartCivic App)
 
-Authentication UI with indigo/blue civic-tech theme using Material 3.
+Civic worker management app with indigo/blue theme using Material 3.
 
 ```
 lib/
-├── main.dart              # App entry, theme config, MaterialApp
+├── main.dart                    # App entry, theme config, MaterialApp
 ├── screens/
-│   ├── login_screen.dart  # Login with email/password validation
-│   └── signup_screen.dart # Signup with password confirmation
+│   ├── login_screen.dart        # Login with role selector (Admin/Worker)
+│   ├── signup_screen.dart       # Signup with password confirmation
+│   ├── admin_dashboard.dart     # Admin dashboard with stats, alerts, workers table
+│   └── worker_dashboard.dart    # Worker dashboard with tasks and image upload
 └── widgets/
-    ├── custom_button.dart     # Reusable button with loading state
-    └── custom_text_field.dart # Reusable form field with validation
+    ├── custom_button.dart       # Reusable button with loading state
+    └── custom_text_field.dart   # Reusable form field with validation
 ```
 
-Navigation uses `Navigator.push/pop` (no routing libraries). Form validation is built-in with `TextFormField` validators. State is managed via `setState` (no Provider/Bloc).
+**Features:**
+- **Login Screen**: Role toggle (Admin/Worker), email/password validation, routes to respective dashboard
+- **Admin Dashboard**: Stats cards, action buttons, worker details table, daily tasks progress, profile popup (notifications, SLA compliance, logout)
+- **Worker Dashboard**: Profile section, task cards with SLA duration, camera/gallery image upload, task completion
+
+Navigation uses `Navigator.push/pop` (no routing libraries). Form validation is built-in with `TextFormField` validators. State is managed via `setState` (no Provider/Bloc). Currently uses mock data (no backend integration).
 
 ### backend
 
