@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_civic/screens/login_screen.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -7,16 +8,30 @@ class AdminDashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+        elevation: 0,
+        title: const Text('SmartCivic Dashboard'),
+        automaticallyImplyLeading: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: GestureDetector(
+              onTap: () => _showProfileMenu(context),
+              child: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.person, color: Colors.indigo),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header with Logo
-              _buildHeader(),
-              const SizedBox(height: 20),
-
               // Stats Cards Row
               _buildStatsSection(),
               const SizedBox(height: 20),
@@ -38,42 +53,94 @@ class AdminDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.indigo.shade50,
-            borderRadius: BorderRadius.circular(12),
+  /// Profile Popup Menu
+  void _showProfileMenu(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Profile Header
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.indigo.shade100,
+                      child: Icon(Icons.person, size: 30, color: Colors.indigo.shade700),
+                    ),
+                    const SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Admin Name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text('Administrator', style: TextStyle(color: Colors.grey.shade600)),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 5),
+
+                // Notifications
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(8)),
+                    child: Icon(Icons.notifications, color: Colors.blue.shade700),
+                  ),
+                  title: const Text('Notifications'),
+                  trailing: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(12)),
+                    child: const Text('3', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening Notifications...')));
+                  },
+                ),
+
+                // SLA Compliance
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: Colors.green.shade50, borderRadius: BorderRadius.circular(8)),
+                    child: Icon(Icons.analytics, color: Colors.green.shade700),
+                  ),
+                  title: const Text('SLA Compliance'),
+                  subtitle: const Text('92% this month'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Opening SLA Compliance...')));
+                  },
+                ),
+
+                // Logout
+                ListTile(
+                  leading: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: Colors.red.shade50, borderRadius: BorderRadius.circular(8)),
+                    child: Icon(Icons.logout, color: Colors.red.shade700),
+                  ),
+                  title: const Text('Logout', style: TextStyle(color: Colors.red)),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  },
+                ),
+              ],
+            ),
           ),
-          child: Icon(
-            Icons.location_city_rounded,
-            size: 32,
-            color: Colors.indigo.shade700,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          'SmartCivic',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.indigo.shade700,
-          ),
-        ),
-        const Spacer(),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications_outlined),
-          iconSize: 28,
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.logout_outlined),
-          iconSize: 28,
-        ),
-      ],
+        );
+      },
     );
   }
 

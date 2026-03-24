@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_civic/screens/admin_dashboard.dart';
 import 'package:smart_civic/screens/signup_screen.dart';
+import 'package:smart_civic/screens/worker_dashboard.dart';
 import 'package:smart_civic/widgets/custom_button.dart';
 import 'package:smart_civic/widgets/custom_text_field.dart';
 
@@ -17,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
+  String _selectedRole = 'admin'; // 'admin' or 'worker'
 
   @override
   void dispose() {
@@ -62,11 +64,18 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = false);
 
     if (mounted) {
-      // Navigate to Admin Dashboard
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const AdminDashboard()),
-      );
+      // Navigate based on selected role
+      if (_selectedRole == 'admin') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const AdminDashboard()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WorkerDashboard()),
+        );
+      }
     }
   }
 
@@ -129,7 +138,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: Colors.grey.shade600,
                           ),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 24),
+
+                        // Role Selector
+                        _buildRoleSelector(),
+                        const SizedBox(height: 24),
 
                         // Email Field
                         CustomTextField(
@@ -174,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ]),
                           builder: (context, child) {
                             return CustomButton(
-                              text: 'Login',
+                              text: 'Login as ${_selectedRole == 'admin' ? 'Admin' : 'Worker'}',
                               isLoading: _isLoading,
                               onPressed: _isFormValid ? _handleLogin : null,
                             );
@@ -210,6 +223,92 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildRoleSelector() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(4),
+      child: Row(
+        children: [
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedRole = 'admin'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: _selectedRole == 'admin'
+                      ? Colors.indigo
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.admin_panel_settings,
+                      size: 20,
+                      color: _selectedRole == 'admin'
+                          ? Colors.white
+                          : Colors.grey.shade600,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Admin',
+                      style: TextStyle(
+                        color: _selectedRole == 'admin'
+                            ? Colors.white
+                            : Colors.grey.shade600,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _selectedRole = 'worker'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: _selectedRole == 'worker'
+                      ? Colors.indigo
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.engineering,
+                      size: 20,
+                      color: _selectedRole == 'worker'
+                          ? Colors.white
+                          : Colors.grey.shade600,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Worker',
+                      style: TextStyle(
+                        color: _selectedRole == 'worker'
+                            ? Colors.white
+                            : Colors.grey.shade600,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
