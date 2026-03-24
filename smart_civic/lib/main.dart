@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_civic/screens/map_screen.dart';
 import 'package:smart_civic/screens/login_screen.dart';
 
 void main() {
@@ -36,7 +37,7 @@ class SmartCivicApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginScreen(),
+      home: MapScreen(),
     );
   }
 }
