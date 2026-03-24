@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_civic/screens/admin_dashboard.dart';
 import 'package:smart_civic/screens/signup_screen.dart';
 import 'package:smart_civic/widgets/custom_button.dart';
 import 'package:smart_civic/widgets/custom_text_field.dart';
@@ -61,11 +62,10 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = false);
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login successful!'),
-          backgroundColor: Colors.green,
-        ),
+      // Navigate to Admin Dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const AdminDashboard()),
       );
     }
   }
