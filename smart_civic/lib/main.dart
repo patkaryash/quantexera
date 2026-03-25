@@ -37,7 +37,7 @@ class SmartCivicApp extends StatelessWidget {
           ),
         ),
       ),
-      home: MapScreen(),
+      home: const LoginScreen(),
     );
   }
 }

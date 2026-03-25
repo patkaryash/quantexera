@@ -156,9 +156,36 @@ const stopDuty = async (req, res) => {
   }
 };
 
+// Assign worker to zone (admin)
+const assignZone = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { zoneId } = req.body;
+
+    const result = await pool.query(
+      `UPDATE workers SET assigned_zone_id = $1 WHERE id = $2 RETURNING *`,
+      [zoneId, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: "Worker not found" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Worker assigned to zone successfully",
+      worker: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Assign zone error:", error.message);
+    return res.status(500).json({ success: false, message: "Failed to assign zone" });
+  }
+};
+
 module.exports = {
   getAllWorkers,
   getWorkerById,
   startDuty,
   stopDuty,
+  assignZone,
 };

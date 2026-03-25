@@ -54,11 +54,33 @@ const updateLocation = async (req, res) => {
       await createZoneViolationAlert(workerId);
     }
 
+    // AUTO-ATTENDANCE: If worker is inside zone, auto-mark attendance for today
+    let attendanceMarked = false;
+    if (isInsideZone === true) {
+      try {
+        const existingAttendance = await pool.query(
+          `SELECT * FROM attendance WHERE worker_id = $1 AND date = CURRENT_DATE`,
+          [workerId]
+        );
+        if (existingAttendance.rows.length === 0) {
+          await pool.query(
+            `INSERT INTO attendance (worker_id, check_in_time, status)
+             VALUES ($1, CURRENT_TIMESTAMP, 'present')`,
+            [workerId]
+          );
+          attendanceMarked = true;
+        }
+      } catch (attErr) {
+        console.error("Auto-attendance error:", attErr.message);
+      }
+    }
+
     return res.status(201).json({
       success: true,
       message: "Location updated successfully",
       location: result.rows[0],
       zoneStatus: isInsideZone,
+      attendanceMarked,
     });
   } catch (error) {
     console.error("Update location error:", error.message);
