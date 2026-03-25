@@ -9,13 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-<<<<<<< HEAD
   flutter_map: ^8.2.2
   http: ^1.6.0
   latlong2: ^0.9.1
-=======
   image_picker: ^1.0.7
->>>>>>> cd2d5ece8a0ddfe5dc5de21e284ebfed8b1eef82
 
 dev_dependencies:
   flutter_test:

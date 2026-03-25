@@ -4,6 +4,7 @@ import 'package:smart_civic/screens/signup_screen.dart';
 import 'package:smart_civic/screens/worker_dashboard.dart';
 import 'package:smart_civic/widgets/custom_button.dart';
 import 'package:smart_civic/widgets/custom_text_field.dart';
+import 'package:smart_civic/services/api_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -58,22 +59,36 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => _isLoading = true);
 
-    // Mock login delay
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final response = await ApiService.login(
+        _emailController.text,
+        _passwordController.text,
+      );
+      
+      final role = response['user']['role'];
 
-    setState(() => _isLoading = false);
-
-    if (mounted) {
-      // Navigate based on selected role
-      if (_selectedRole == 'admin') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const AdminDashboard()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkerDashboard()),
+      if (mounted) {
+        setState(() => _isLoading = false);
+        if (role == 'admin') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const AdminDashboard()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const WorkerDashboard()),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Login failed. Please check credentials or backend connection.'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -240,34 +255,37 @@ class _LoginScreenState extends State<LoginScreen> {
             child: GestureDetector(
               onTap: () => setState(() => _selectedRole = 'admin'),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                 decoration: BoxDecoration(
                   color: _selectedRole == 'admin'
                       ? Colors.indigo
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.admin_panel_settings,
-                      size: 20,
-                      color: _selectedRole == 'admin'
-                          ? Colors.white
-                          : Colors.grey.shade600,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Admin',
-                      style: TextStyle(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.admin_panel_settings,
+                        size: 20,
                         color: _selectedRole == 'admin'
                             ? Colors.white
                             : Colors.grey.shade600,
-                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        'Admin',
+                        style: TextStyle(
+                          color: _selectedRole == 'admin'
+                              ? Colors.white
+                              : Colors.grey.shade600,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -276,34 +294,37 @@ class _LoginScreenState extends State<LoginScreen> {
             child: GestureDetector(
               onTap: () => setState(() => _selectedRole = 'worker'),
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
                 decoration: BoxDecoration(
                   color: _selectedRole == 'worker'
                       ? Colors.indigo
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.engineering,
-                      size: 20,
-                      color: _selectedRole == 'worker'
-                          ? Colors.white
-                          : Colors.grey.shade600,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Worker',
-                      style: TextStyle(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.engineering,
+                        size: 20,
                         color: _selectedRole == 'worker'
                             ? Colors.white
                             : Colors.grey.shade600,
-                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        'Worker',
+                        style: TextStyle(
+                          color: _selectedRole == 'worker'
+                              ? Colors.white
+                              : Colors.grey.shade600,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

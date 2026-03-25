@@ -119,12 +119,24 @@ const completeTask = async (req, res) => {
   try {
     const { id } = req.params;
 
+    // Get the worker id from the authenticated user
+    let workerId = null;
+    if (req.user && req.user.id) {
+      const workerResult = await pool.query(
+        "SELECT id FROM workers WHERE user_id = $1",
+        [req.user.id]
+      );
+      if (workerResult.rows.length > 0) {
+        workerId = workerResult.rows[0].id;
+      }
+    }
+
     const result = await pool.query(
       `UPDATE tasks
-       SET status = 'completed'
+       SET status = 'completed', assigned_worker_id = COALESCE($2, assigned_worker_id)
        WHERE id = $1
        RETURNING *`,
-      [id]
+      [id, workerId]
     );
 
     if (result.rows.length === 0) {

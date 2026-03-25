@@ -7,6 +7,7 @@ const locationRoutes = require("./src/routes/locationRoutes");
 const taskRoutes = require("./src/routes/taskRoutes");
 const attendanceRoutes = require("./src/routes/attendanceRoutes");
 const alertRoutes = require("./src/routes/alertRoutes");
+const zoneRoutes = require("./src/routes/zoneRoutes");
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use("/api/locations", locationRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/attendance", attendanceRoutes);
 app.use("/api/alerts", alertRoutes);
+app.use("/api/zones", zoneRoutes);
 
 module.exports = app;
